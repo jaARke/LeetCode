@@ -63,11 +63,11 @@ class Solution {
 public:
     void rotate(vector<vector<int>>& matrix) {
         for (int i = 0; i < matrix.size(); i++) {
-            for (int j = i; j < matrix.size(); j++) {
+            for (int j = i; j < matrix.size(); j++) {   // Rotate the matrix about the diagonal
                 swap(matrix[i][j], matrix[j][i]);
             }
         }
-        for (auto& i : matrix) {
+        for (auto& i : matrix) {    // Reverse each row of the matrix
             reverse(i.begin(), i.end());
         }
     }

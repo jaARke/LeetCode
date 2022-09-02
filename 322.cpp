@@ -22,7 +22,7 @@ public:
             }
         }
         if (dp[coins.size()][amount] == INT32_MAX) {
-            return - 1;
+            return -1;
         }
         else {
             return dp[coins.size()][amount];

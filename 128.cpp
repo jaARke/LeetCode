@@ -1,9 +1,42 @@
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
 #include <iostream>
 
 using namespace std;
 
+/*
+ * There are two solutions given below. The first inserts all numbers into a set and then iterates through the set. If
+ * the current number has no consecutive number lower than it, we check how many numbers are consecutively greater than it.
+ *
+ * The second uses sorting and iterates the list afterwards. On paper, the set method has faster runtime, but sorting
+ * gives a better result on LeetCode.
+ */
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> s;
+        for (auto& x : nums) {
+            s.insert(x);
+        }
+        int result = INT32_MIN;
+        for (auto& x : s) {
+            if (s.find(x - 1) == s.end()) { // This is the lowest number of this possible sequence
+                int curr = x;
+                int length = 1;
+                while (s.find(curr + 1) != s.end()) {
+                    length++;
+                    curr++;
+                }
+                result = max(result, length);
+            }
+        }
+        return result;
+    }
+};
+
+/*
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
@@ -28,6 +61,7 @@ public:
         return res;
     }
 };
+ */
 
 int main() {
     Solution s;

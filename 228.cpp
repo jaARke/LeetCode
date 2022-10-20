@@ -1,5 +1,5 @@
-#include <vector>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -9,26 +9,27 @@ public:
         if (nums.empty()) {
             return {};
         }
+        int back = nums[0];
+        int prev = nums[0];
         vector<string> res;
-        int curr = nums[0];
-        string currStr = "";
         for (int i = 1; i < nums.size(); i++) {
-            if (nums[i] != nums[i - 1] + 1) {
-                currStr = to_string(curr);
-                if (curr != nums[i - 1]) {
-                    currStr += "->";
-                    currStr += to_string(nums[i - 1]);
+            if (nums[i] - 1 != prev) {
+                if (prev == back) {
+                    res.push_back(to_string(back));
                 }
-                res.push_back(currStr);
-                curr = nums[i];
+                else {
+                    res.push_back(to_string(back) + "->" + to_string(prev));
+                }
+                back = nums[i];
             }
+            prev = nums[i];
         }
-        currStr = to_string(curr);
-        if (curr != nums.back()) {
-            currStr += "->";
-            currStr += to_string(nums.back());
+        if (back != prev) {
+            res.push_back(to_string(back) + "->" + to_string(prev));
         }
-        res.push_back(currStr);
+        else {
+            res.push_back(to_string(back));
+        }
         return res;
     }
 };

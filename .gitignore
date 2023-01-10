@@ -1,6 +1,11 @@
+# Ignore files without extensions
+*
+!/**/
+!*.*
+
+/Interviews
 /CMakeLists.txt
 /cmake-build-debug
 .vscode
 .idea
 *.exe
-/Interviews

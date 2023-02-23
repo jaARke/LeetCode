@@ -2,6 +2,14 @@
 
 using namespace std;
 
+/*
+The following solution is an optimization of the below. We observe that at each node, we need to count the frequency of that node's letter below the node itself. So, we keep track of the letter's frequency as it appears
+when we arrive at the node. Then, we recursively traverse the tree and add to chars as we arrive at different letters. When going back up the recursive chain, the new value of the chars array will be compared to the
+value when first arriving at a given node and the difference is our result.
+
+DFS works well here because it ensures that a node is revisited exactly after all of its subtrees have been traversed, allowing us to obtain the correct result from the stated difference.
+*/
+
 class Solution {
 private:
     void recHelper(vector<vector<int>>& adjList, vector<int>& res, vector<int>& chars, vector<bool>& seen, string& s, int curr) {

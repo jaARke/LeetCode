@@ -1,33 +1,43 @@
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 class Solution {
 public:
     int findNumberOfLIS(vector<int>& nums) {
-        vector<int> lengths(nums.size(), 1);
+        vector<int> dp(nums.size(), 1);
         vector<int> counts(nums.size(), 1);
         int currMax = 1;
-        for (int i = 1; i < nums.size(); i++) {
+
+        for (int i = 0; i < nums.size(); i++) {
             for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
-                    if (lengths[i] < lengths[j] + 1) {
-                        lengths[i] = lengths[j] + 1;
+                    if (dp[i] < dp[j] + 1) {
+                        dp[i] = dp[j] + 1;
                         counts[i] = counts[j];
-                        currMax = max(lengths[i], currMax);
                     }
-                    else if (lengths[i] == lengths[j] + 1) {
+                    else if (dp[i] == dp[j] + 1) {
                         counts[i] += counts[j];
                     }
                 }
+                currMax = max(currMax, dp[i]);
             }
         }
+
         int res = 0;
         for (int i = 0; i < nums.size(); i++) {
-            if (lengths[i] == currMax) {
+            if (dp[i] == currMax) {
                 res += counts[i];
             }
         }
         return res;
     }
 };
+
+int main() {
+    Solution s;
+    vector<int> nums = {1,3,5,4,7};
+
+    cout << s.findNumberOfLIS(nums) << endl;
+    return 0;
+}

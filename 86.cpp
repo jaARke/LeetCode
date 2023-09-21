@@ -1,7 +1,6 @@
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
-
 struct ListNode {
     int val;
     ListNode *next;
@@ -13,34 +12,51 @@ struct ListNode {
 class Solution {
 public:
     ListNode* partition(ListNode* head, int x) {
-        if (!head) {
-            return nullptr;
-        }
-        vector<ListNode*> v1, v2;
+        ListNode* lessHead = nullptr;
+        ListNode* greaterHead = nullptr;
+        ListNode* lessTail = nullptr;
+        ListNode* greaterTail = nullptr;
+
         while (head) {
+            ListNode* save = head->next;
             if (head->val < x) {
-                v1.push_back(head);
+                if (lessHead) {
+                    lessTail->next = head;
+                    lessTail = lessTail->next;
+                }
+                else {
+                    lessHead = head;
+                    lessTail = head;
+                }
+                lessTail->next = nullptr;
             }
             else {
-                v2.push_back(head);
+                if (greaterHead) {
+                    greaterTail->next = head;
+                    greaterTail = greaterTail->next;
+                    greaterTail->next = nullptr;
+                }
+                else {
+                    greaterHead = head;
+                    greaterTail = head;
+                }
+                greaterTail->next = nullptr;
             }
-            ListNode* temp = head->next;
-            head->next = nullptr;
-            head = temp;
+            head = save;
         }
-        ListNode* prev = nullptr;
-        for (int i = 0; i < v1.size(); i++) {
-            if (prev) {
-                prev->next = v1[i];
-            }
-            prev = v1[i];
+        if (lessHead) {
+            lessTail->next = greaterHead;
+            return lessHead;
         }
-        for (int i = 0; i < v2.size(); i++) {
-            if (prev) {
-                prev->next = v2[i];
-            }
-            prev = v2[i];
-        }
-        return (v1.size() == 0 ? v2[0] : v1[0]);
+        return greaterHead;
     }
 };
+
+int main() {
+    Solution s;
+    ListNode* head = new ListNode(1, new ListNode(4, new ListNode(3, new ListNode(2, new ListNode(5, new ListNode(2))))));
+    int x = 3;
+    auto* res = s.partition(head, x);
+    cout << "Done!" << endl;
+    return 0;
+}

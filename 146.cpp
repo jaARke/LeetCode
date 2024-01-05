@@ -12,41 +12,53 @@ using namespace std;
 
 class LRUCache {
 private:
-    unordered_map<int, pair<int, list<int>::iterator>> m;
-    list<int> l;
     int capacity;
+    unordered_map<int, list<pair<int, int>>::iterator> cache;
+    list<pair<int, int>> evicList;
+
 public:
     LRUCache(int capacity) {
         this->capacity = capacity;
     }
-
+    
     int get(int key) {
-        if (m.find(key) == m.end()) {
-            return -1;
-        }
-        l.erase(m[key].second);
-        l.push_front(key);
-        m[key].second = l.begin();
-        return m[key].first;
-    }
+        auto iter = cache.find(key);
+        if (iter == end(cache)) return -1;
 
+        int val = iter->second->second;
+
+        evicList.erase(iter->second);
+        evicList.push_front({key, val});
+
+        cache.erase(key);
+        cache[key] = evicList.begin();
+
+        return val;
+    }
+    
     void put(int key, int value) {
-        if (m.find(key) != m.end()) {
-            m[key].first = value;
-            l.erase(m[key].second);
-            l.push_front(key);
-            m[key].second = l.begin();
+        auto iter = cache.find(key);
+
+        if (iter != end(cache)) {
+            evicList.erase(iter->second);
+            cache.erase(key);
         }
-        else {
-            if (m.size() == capacity) {
-                m.erase(l.back());
-                l.pop_back();
-            }
-            l.push_front(key);
-            m[key] = make_pair(value, l.begin());
+        evicList.push_front({key, value});
+        cache[key] = evicList.begin();
+
+        if (cache.size() > capacity) {
+            cache.erase(evicList.back().first);
+            evicList.pop_back();
         }
     }
 };
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
 
 /*
  * The following is a homemade solution using a doubly-linked list.
@@ -125,12 +137,25 @@ public:
  */
 
 int main() {
-    LRUCache c(1);
-    c.put(4, 9);
-    c.put(9,7);
-    c.put(4,8);
-    c.put(6, 5);
-    c.put(1,3);
-    c.put(27, 54);
-    cout << c.get(4) << endl;
+    LRUCache c(10);
+    c.put(7, 28);
+    c.put(7 ,1);
+    c.put(8, 15);
+    c.get(6);
+    c.put(10, 27);
+    c.put(8, 10);
+    c.get(8);
+    c.put(6, 29);
+    c.put(1, 9);
+    c.get(6);
+    c.put(10, 7);
+    c.get(1);
+    c.get(2);
+    c.get(13);
+    c.put(8, 30);
+    c.put(1, 5);
+    c.get(1);
+    c.put(13 ,2);
+    c.get(12);
+    return 0;
 }
